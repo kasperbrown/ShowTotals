@@ -1,0 +1,88 @@
+	@FXML
+	private AnchorPane anchorPaneShowTotal;
+	@FXML
+	private RadioButton rbtnPersonAccounts;
+	@FXML
+	private RadioButton rbtnAllAccounts;
+	@FXML
+	private Button btnShowTotalBalance;
+	@FXML
+	private TextField tfPersonIdTotals;
+	@FXML
+	private Label totalsSuccess;
+	@FXML
+	private Label totalsFail;
+	@FXML
+	private Label amountSuccess;
+	@FXML
+	private Label amountFail;
+	@FXML
+	private Label totalBalanceLabel;
+		
+	public void btnMenuShowTotalClicked(ActionEvent event) {
+		initialize();
+		anchorPaneShowTotal.opacityProperty().set(1);
+		anchorPaneShowTotal.disableProperty().set(false);
+		btnShowTotalBalance.disableProperty().set(true);
+		tfPersonIdTotals.disableProperty().set(true);
+		rbtnPersonAccounts.setSelected(false);
+		rbtnAllAccounts.setSelected(false);
+		tfPersonIdTotals.setText("");
+	}
+	
+	public void rbtnPersonAccountsClicked(ActionEvent event) {
+		if (rbtnPersonAccounts.isSelected() == true || rbtnAllAccounts.isSelected() == true) {
+			tfPersonIdTotals.disableProperty().set(false);
+			btnShowTotalBalance.disableProperty().set(false);
+		}
+	}
+	
+	public void rbtnAllAccountsClicked(ActionEvent event) {
+		if (rbtnPersonAccounts.isSelected() == true || rbtnAllAccounts.isSelected() == true) {
+			tfPersonIdTotals.disableProperty().set(true);
+			btnShowTotalBalance.disableProperty().set(false);
+			tfPersonIdTotals.setText("");
+		} 
+	}
+
+	public void btnShowTotalClicked(ActionEvent event) {
+		Double totalBalance = (double) 0;
+		String totalBalancePrint;
+		//print all accounts
+		if (rbtnAllAccounts.isSelected() == true) {
+			for(Person person : pReg.getRegister()) {
+				for(BankAccount account : person.getAccount()){
+					totalBalance+=account.getBalance();;					
+				}
+			}
+			totalBalancePrint = totalBalance.toString();
+			totalBalanceLabel.setText(totalBalancePrint);
+		} 
+		//print one account
+		else{
+			if(tfPersonIdTotals.getText() == ("")) {
+				totalsFail.setText("Please enter correct person ID");
+			}
+			else {
+				totalsFail.setText("");
+				totalBalance = (double) 0;
+				totalBalancePrint = totalBalance.toString();
+				for(Person person : pReg.getRegister()) {
+					totalBalanceLabel.setText("");
+					if(tfPersonIdTotals.getText().equals(pReg.findPerson(tfPersonIdTotals.getText()).getPersonId())) {
+						for(BankAccount account : person.getAccount()){
+							totalBalance=totalBalance+account.getBalance();
+							System.out.println(person.getAccount());
+						}
+					}
+					else {
+						totalsFail.setText("This person ID doesn't exist.");
+					}
+				}
+				totalBalancePrint = totalBalance.toString();
+				totalBalanceLabel.setText(totalBalancePrint);
+				System.out.println(totalBalancePrint+"Hej");
+			}
+		}
+	}
+}
